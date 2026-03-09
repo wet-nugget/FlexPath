@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_blue">
+
+    <!-- Background Image -->
+    <ImageView
+        android:id="@+id/imageviewBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/bg_dark_geometric"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        android:alpha="0.3"
+        android:contentDescription="@string/background_desc"/>
+
+    <!-- Logo at top -->
+    <ImageView
+        android:id="@+id/imageviewLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/ic_fp_logo"
+        android:contentDescription="@string/app_logo_desc"/>
+
+    <!-- Heading below logo -->
+    <TextView
+        android:id="@+id/textviewHeading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/create_account"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_below="@id/imageviewLogo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/allerta_stencil"/>
+
+    <!-- Bottom link -->
+    <TextView
+        android:id="@+id/textviewLoginLink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/already_have_account"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="24dp"
+        android:fontFamily="@font/allerta_stencil"/>
+
+    <!-- Form in between -->
+    <LinearLayout
+        android:id="@+id/layoutForm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/textviewHeading"
+        android:layout_above="@id/textviewLoginLink"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="16dp">
+
+        <!-- Username Input -->
+        <EditText
+            android:id="@+id/edittextUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/username"
+            android:inputType="textPersonName"
+            android:padding="12dp"
+            android:background="@drawable/input_background"
+            android:textColor="@color/white"
+            android:fontFamily="@font/allerta_stencil"/>
+
+        <!-- Password Input -->
+        <EditText
+            android:id="@+id/edittextPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:layout_marginTop="12dp"
+            android:padding="12dp"
+            android:background="@drawable/input_background"
+            android:textColor="@color/white"
+            android:fontFamily="@font/allerta_stencil"/>
+
+        <!-- Re-enter Password Input -->
+        <EditText
+            android:id="@+id/edittextReenterPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/reenter_password"
+            android:inputType="textPassword"
+            android:layout_marginTop="12dp"
+            android:padding="12dp"
+            android:background="@drawable/input_background"
+            android:textColor="@color/white"
+            android:fontFamily="@font/allerta_stencil"/>
+
+        <!-- Submit Button -->
+        <Button
+            android:id="@+id/buttonSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/submit"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/yellow"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:fontFamily="@font/allerta_stencil"/>
+    </LinearLayout>
+</RelativeLayout>

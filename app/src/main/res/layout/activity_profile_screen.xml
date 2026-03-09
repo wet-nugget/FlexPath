@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_blue">
+
+    <!-- Background Image -->
+    <ImageView
+        android:id="@+id/imageviewBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/bg_dark_geometric"
+        android:scaleType="centerCrop"
+        android:alpha="0.3"
+        android:contentDescription="@null"/>
+
+    <!-- Clear Users Button (for credentials purposes) -->
+    <TextView
+        android:id="@+id/textviewClearUsers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/clear_users"
+        android:textSize="12sp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:textColor="@color/yellow"
+        android:textStyle="bold"
+        android:fontFamily="@font/allerta_stencil"/>
+
+    <!-- Heading -->
+    <TextView
+        android:id="@+id/textviewHeading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/profile_heading"
+        android:textColor="@color/white"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/allerta_stencil"/>
+
+    <ImageView
+        android:id="@+id/profileImage"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/speed"
+        android:layout_marginTop="24dp"
+        android:layout_below="@id/textviewHeading"
+        android:layout_centerHorizontal="true"/>
+
+    <!-- Profile Info Container -->
+    <LinearLayout
+        android:id="@+id/layoutProfileInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/profileImage"
+        android:layout_marginTop="24dp"
+        android:layout_marginHorizontal="32dp">
+
+        <!-- Username -->
+        <TextView
+            android:id="@+id/textviewUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Username: John Doe"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:background="@drawable/card_background"
+            android:layout_marginBottom="12dp"
+            android:fontFamily="@font/allerta_stencil"/>
+
+        <!-- First Name -->
+        <TextView
+            android:id="@+id/textviewFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="First Name: John"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/card_background"
+            android:fontFamily="@font/allerta_stencil"/>
+
+        <!-- Middle Name -->
+        <TextView
+            android:id="@+id/textviewMiddleName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Middle Name: A."
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/card_background"
+            android:fontFamily="@font/allerta_stencil"/>
+
+        <!-- Last Name -->
+        <TextView
+            android:id="@+id/textviewLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Last Name: Doe"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/card_background"
+            android:fontFamily="@font/allerta_stencil"/>
+
+        <!-- Email -->
+        <TextView
+            android:id="@+id/textviewEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email: johndoe@example.com"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/card_background"
+            android:fontFamily="@font/allerta_stencil"/>
+    </LinearLayout>
+
+    <!-- Bottom Navigation -->
+    <LinearLayout
+        android:id="@+id/layoutBottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:background="@color/dark_blue">
+
+        <ImageView
+            android:id="@+id/iconHome"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_home"
+            android:contentDescription="@string/home_desc"
+            android:scaleY=".75"
+            android:scaleX=".75"
+            android:layout_gravity="center"/>
+
+        <ImageView
+            android:id="@+id/iconWorkouts"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_dumbbell"
+            android:contentDescription="@string/workouts_desc"
+            android:scaleY=".75"
+            android:scaleX=".75"
+            android:layout_gravity="center"/>
+
+        <ImageView
+            android:id="@+id/iconPlans"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_clipboard"
+            android:contentDescription="@string/plans_desc"
+            android:scaleY=".75"
+            android:scaleX=".75"
+            android:layout_gravity="center"/>
+
+        <ImageView
+            android:id="@+id/iconProfile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_user"
+            android:contentDescription="@string/profile_desc"
+            android:scaleY=".75"
+            android:scaleX=".75"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+</RelativeLayout>

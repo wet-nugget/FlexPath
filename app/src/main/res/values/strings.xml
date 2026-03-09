@@ -1,0 +1,48 @@
+<resources>
+
+    <!-- App -->
+    <string name="app_name">FlexPath</string>
+    <string name="app_logo_desc">FlexPath logo</string>
+    <string name="background_desc">Geometric background</string>
+
+    <!-- Common -->
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="create_account">Create Account</string>
+
+    <!-- Login -->
+    <string name="login_with_email">Login with Email</string>
+    <string name="login">Login</string>
+    <string name="forgot_password">Forgot Password? Click Here</string>
+
+    <!-- Register -->
+    <string name="username">Username</string>
+    <string name="reenter_password">Re-enter Password</string>
+    <string name="submit">Confirm</string>
+    <string name="already_have_account">Already have an account? Login</string>
+
+    <!-- Dashboard -->
+    <string name="settings_desc">Settings</string>
+    <string name="greeting_text">Hello, User</string>
+    <string name="ready_to_train">Ready to train today?</string>
+
+    <string name="upper_body">Upper Body</string>
+    <string name="upper_body_details">⏱ 60 Minutes • 🏋️ 5 Exercises</string>
+    <string name="upper_body_desc">Upper body workout image</string>
+
+    <string name="lower_body">Lower Body</string>
+    <string name="lower_body_details">⏱ 60 Minutes • 🏋️ 5 Exercises</string>
+    <string name="lower_body_desc">Lower body workout image</string>
+
+    <string name="home_desc">Home</string>
+    <string name="workouts_desc">Workouts</string>
+    <string name="plans_desc">Plans</string>
+    <string name="profile_desc">Profile</string>
+
+    <string name="logout">Logout</string>
+
+    <!-- Profile -->
+    <string name="profile_heading">Profile</string>
+    <string name="clear_users">Clear Users</string>
+
+</resources>
