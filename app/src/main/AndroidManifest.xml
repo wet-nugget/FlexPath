@@ -13,16 +13,16 @@
         android:theme="@style/Theme.FlexPath"
         tools:targetApi="31">
         <activity
-            android:name=".ProfileScreenActivity"
+            android:name=".screens.profile.ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".DashboardActivity"
+            android:name=".screens.dashboard.DashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterScreenActivity"
+            android:name=".screens.register.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginScreenActivity"
+            android:name=".screens.login.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

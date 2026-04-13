@@ -1,15 +1,16 @@
-package com.example.flexpath
+package com.example.flexpath.screens.profile
 
 import android.app.Activity
 import android.content.Intent
-import android.media.Image
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import org.w3c.dom.Text
+import com.example.flexpath.screens.dashboard.DashboardActivity
+import com.example.flexpath.R
+import com.example.flexpath.screens.login.LoginActivity
 
-class ProfileScreenActivity : Activity() {
+class ProfileActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_screen)
@@ -23,7 +24,7 @@ class ProfileScreenActivity : Activity() {
             editor.clear()
             editor.apply()
 
-            val intent = Intent(this, LoginScreenActivity::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             Toast.makeText(this, "Cleared Users", Toast.LENGTH_SHORT).show()
             startActivity(intent)
             finish()
