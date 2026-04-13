@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_blue">
+    android:background="@color/blue_bg">
 
     <!-- Background Image -->
     <ImageView
@@ -71,6 +71,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/username"
+            android:autofillHints="username"
+            android:importantForAutofill="yes"
             android:inputType="textPersonName"
             android:padding="12dp"
             android:background="@drawable/input_background"
@@ -83,6 +85,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/password"
+            android:autofillHints="password"
+            android:importantForAutofill="yes"
             android:inputType="textPassword"
             android:layout_marginTop="12dp"
             android:padding="12dp"
@@ -96,6 +100,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/reenter_password"
+            android:autofillHints="password"
+            android:importantForAutofill="yes"
             android:inputType="textPassword"
             android:layout_marginTop="12dp"
             android:padding="12dp"
