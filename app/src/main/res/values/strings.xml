@@ -44,5 +44,10 @@
     <!-- Profile -->
     <string name="profile_heading">Profile</string>
     <string name="clear_users">Clear Users</string>
+    <string name="example_username">Username: John Doe</string>
+    <string name="example_name_first">First Name: John</string>
+    <string name="example_name_middle">Middle Name: A.</string>
+    <string name="example_name_last">Last Name: Doe</string>
+    <string name="example_email">Email: johndoe@example.com</string>
 
 </resources>

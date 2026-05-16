@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import com.example.flexpath.R
 import com.example.flexpath.screens.login.LoginActivity
@@ -19,17 +20,22 @@ class RegisterActivity : Activity(), RegisterContract.View {
         presenter = RegisterPresenter(this)
         presenter.attachView(this)
 
-        val editTextUsername: EditText = findViewById(R.id.edittextUsername)
-        val editTextPassword: EditText = findViewById(R.id.edittextPassword)
-        val editTextReenter: EditText = findViewById(R.id.edittextReenterPassword)
+        val edittextUsername: EditText = findViewById(R.id.edittextUsername)
+        val edittextPassword: EditText = findViewById(R.id.edittextPassword)
+        val edittextReenter: EditText = findViewById(R.id.edittextReenterPassword)
         val btnSubmit: Button = findViewById(R.id.buttonSubmit)
+        val textviewLoginLink: TextView = findViewById(R.id.textviewLoginLink)
 
         btnSubmit.setOnClickListener {
             presenter.onRegister(
-                editTextUsername.text.toString().trim(),
-                editTextPassword.text.toString().trim(),
-                editTextReenter.text.toString().trim()
+                edittextUsername.text.toString().trim(),
+                edittextPassword.text.toString().trim(),
+                edittextReenter.text.toString().trim()
             )
+        }
+
+        textviewLoginLink.setOnClickListener {
+            startActivity(Intent(this, LoginActivity::class.java))
         }
     }
 

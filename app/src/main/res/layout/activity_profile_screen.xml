@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_blue">
+    android:background="@color/blue_bg">
 
     <!-- Background Image -->
     <ImageView
@@ -39,12 +39,13 @@
         android:textSize="50sp"
         android:textStyle="bold"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="40dp"
         android:fontFamily="@font/allerta_stencil"/>
 
     <ImageView
         android:id="@+id/profileImage"
+        android:contentDescription="@string/profile_desc"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:src="@drawable/speed"
@@ -67,7 +68,7 @@
             android:id="@+id/textviewUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Username: John Doe"
+            android:text="@string/example_username"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:background="@drawable/card_background"
@@ -79,7 +80,7 @@
             android:id="@+id/textviewFirstName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="First Name: John"
+            android:text="@string/example_name_first"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:layout_marginBottom="12dp"
@@ -91,7 +92,7 @@
             android:id="@+id/textviewMiddleName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Middle Name: A."
+            android:text="@string/example_name_middle"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:layout_marginBottom="12dp"
@@ -103,7 +104,7 @@
             android:id="@+id/textviewLastName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Last Name: Doe"
+            android:text="@string/example_name_last"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:layout_marginBottom="12dp"
@@ -115,7 +116,7 @@
             android:id="@+id/textviewEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Email: johndoe@example.com"
+            android:text="@string/example_email"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:layout_marginBottom="12dp"
