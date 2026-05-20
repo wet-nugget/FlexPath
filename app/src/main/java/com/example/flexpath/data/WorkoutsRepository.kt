@@ -15,12 +15,10 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 class WorkoutsRepository(private val context: Context) {
-
     companion object {
         private val KEY_USER_LIST = stringPreferencesKey("workouts_user_list")
     }
 
-    // Provided pool (same items you already had)
     private val pool: List<WorkoutItem> = listOf(
         WorkoutItem(
             id = 1001L,
@@ -29,7 +27,7 @@ class WorkoutsRepository(private val context: Context) {
             secondaryMuscles = listOf(MuscleGroup.SHOULDERS, MuscleGroup.TRICEPS),
             equipment = Equipment.DUMBBELL,
             difficulty = Difficulty.INTERMEDIATE,
-            description = "Flat bench dumbbell press - controlled descent, full range."
+            description = "Flat bench dumbbell press, controlled descent, full range."
         ),
         WorkoutItem(
             id = 1002L,
@@ -47,7 +45,7 @@ class WorkoutsRepository(private val context: Context) {
             secondaryMuscles = listOf(MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS),
             equipment = Equipment.BARBELL,
             difficulty = Difficulty.ADVANCED,
-            description = "Conventional deadlift - keep a neutral spine and drive through heels."
+            description = "Conventional deadlift, keep a neutral spine and drive through heels."
         ),
         WorkoutItem(
             id = 1004L,
@@ -65,7 +63,7 @@ class WorkoutsRepository(private val context: Context) {
             secondaryMuscles = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES),
             equipment = Equipment.BARBELL,
             difficulty = Difficulty.INTERMEDIATE,
-            description = "Back squat — depth as mobility allows, chest up."
+            description = "Back squat, depth as mobility allows, chest up."
         ),
         WorkoutItem(
             id = 1006L,
@@ -83,7 +81,7 @@ class WorkoutsRepository(private val context: Context) {
             secondaryMuscles = listOf(MuscleGroup.TRICEPS),
             equipment = Equipment.DUMBBELL,
             difficulty = Difficulty.INTERMEDIATE,
-            description = "Seated or standing press; control the eccentric phase."
+            description = "Seated or standing press, control the eccentric phase."
         ),
         WorkoutItem(
             id = 1008L,
@@ -92,7 +90,7 @@ class WorkoutsRepository(private val context: Context) {
             secondaryMuscles = emptyList(),
             equipment = Equipment.CABLE,
             difficulty = Difficulty.BEGINNER,
-            description = "Use rope or bar; keep elbows pinned to sides."
+            description = "Use rope or bar, keep elbows pinned to sides."
         ),
         WorkoutItem(
             id = 1009L,
@@ -101,7 +99,7 @@ class WorkoutsRepository(private val context: Context) {
             secondaryMuscles = listOf(MuscleGroup.HAMSTRINGS, MuscleGroup.CORE),
             equipment = Equipment.KETTLEBELL,
             difficulty = Difficulty.INTERMEDIATE,
-            description = "Hip hinge explosive swing; avoid excessive knee bend."
+            description = "Hip hinge explosive swing, avoid excessive knee bend."
         ),
         WorkoutItem(
             id = 1010L,
@@ -110,91 +108,124 @@ class WorkoutsRepository(private val context: Context) {
             secondaryMuscles = emptyList(),
             equipment = Equipment.BODYWEIGHT,
             difficulty = Difficulty.BEGINNER,
-            description = "Isometric core hold; maintain a straight line from head to heels."
+            description = "Isometric core hold, maintain a straight line from head to heels."
         )
     )
 
+    
     fun getProvidedPool(): List<WorkoutItem> = pool
 
-    /**
-     * Load the user list once. Runs on Dispatchers.IO.
-     */
+    
     suspend fun loadUserList(): MutableList<WorkoutItem> = withContext(Dispatchers.IO) {
         val json = context.dataStore.data
             .map { prefs -> prefs[KEY_USER_LIST] }
             .first()
 
-        if (json.isNullOrBlank()) return@withContext mutableListOf()
+        if (json.isNullOrBlank()) {
+            return@withContext mutableListOf()
+        }
 
         return@withContext try {
             val arr = JSONArray(json)
-            val out = mutableListOf<WorkoutItem>()
+            val workoutList = mutableListOf<WorkoutItem>()
+
             for (i in 0 until arr.length()) {
                 val obj = arr.getJSONObject(i)
-                out.add(jsonToWorkout(obj))
+                workoutList.add(jsonToWorkout(obj))
             }
-            out
+            workoutList
         } catch (ex: Exception) {
-            // If parsing fails, return empty list (caller can show a message if desired)
             mutableListOf()
         }
     }
 
-    /**
-     * Save the user list. Runs on Dispatchers.IO.
-     */
+    
     suspend fun saveUserList(list: List<WorkoutItem>) = withContext(Dispatchers.IO) {
         val arr = JSONArray()
         list.forEach { item -> arr.put(workoutToJson(item)) }
+
         val json = arr.toString()
+
         context.dataStore.edit { prefs ->
             prefs[KEY_USER_LIST] = json
         }
     }
 
+    
     suspend fun addFromPoolById(id: Long): WorkoutItem? = withContext(Dispatchers.IO) {
+
         val userList = loadUserList()
-        if (userList.any { it.id == id }) return@withContext null
-        val item = pool.firstOrNull { it.id == id } ?: return@withContext null
+
+
+        if (userList.any { it.id == id }) {
+            return@withContext null
+        }
+
+
+        val item = pool.firstOrNull { it.id == id }
+        if (item == null) {
+            return@withContext null
+        }
+
+
         userList.add(0, item)
+
+
         saveUserList(userList)
-        item
+
+        return@withContext item
     }
 
+    
     suspend fun removeFromUserListById(id: Long): WorkoutItem? = withContext(Dispatchers.IO) {
+
         val userList = loadUserList()
+
+
         val idx = userList.indexOfFirst { it.id == id }
-        if (idx < 0) return@withContext null
+        if (idx < 0) {
+            return@withContext null
+        }
+
         val removed = userList.removeAt(idx)
+
+
         saveUserList(userList)
-        removed
+
+        return@withContext removed
     }
 
+    
     suspend fun clearUserList() = withContext(Dispatchers.IO) {
         context.dataStore.edit { prefs ->
             prefs.remove(KEY_USER_LIST)
         }
     }
 
-    // JSON helpers (unchanged)
+
+    
     private fun workoutToJson(item: WorkoutItem): JSONObject {
         val obj = JSONObject()
         obj.put("id", item.id)
         obj.put("title", item.title)
         obj.put("primary", item.primaryMuscle.name)
+
         val secArr = JSONArray()
         item.secondaryMuscles.forEach { secArr.put(it.name) }
         obj.put("secondaries", secArr)
+
         obj.put("equipment", item.equipment.name)
         obj.put("difficulty", item.difficulty.name)
         obj.put("description", item.description)
         return obj
     }
 
+    
     private fun jsonToWorkout(obj: JSONObject): WorkoutItem {
         val id = obj.getLong("id")
         val title = obj.getString("title")
         val primary = MuscleGroup.valueOf(obj.getString("primary"))
+
         val secondaries = mutableListOf<MuscleGroup>()
         if (obj.has("secondaries") && !obj.isNull("secondaries")) {
             val secArr = obj.getJSONArray("secondaries")
@@ -202,9 +233,15 @@ class WorkoutsRepository(private val context: Context) {
                 secondaries.add(MuscleGroup.valueOf(secArr.getString(j)))
             }
         }
+
         val equipment = Equipment.valueOf(obj.getString("equipment"))
         val difficulty = Difficulty.valueOf(obj.getString("difficulty"))
-        val description = if (obj.has("description") && !obj.isNull("description")) obj.getString("description") else null
+        val description = if (obj.has("description") && !obj.isNull("description")) {
+            obj.getString("description")
+        } else {
+            null
+        }
+
         return WorkoutItem(id, title, primary, secondaries, equipment, difficulty, description)
     }
 }

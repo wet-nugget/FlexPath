@@ -2,6 +2,7 @@ package com.example.flexpath.screens.workouts
 
 interface WorkoutsContract {
     interface View {
+
         fun showProvidedPool(pool: List<WorkoutItem>)
         fun showUserList(list: List<WorkoutItem>)
         fun showAdded(item: WorkoutItem)
@@ -9,12 +10,12 @@ interface WorkoutsContract {
         fun showMessage(message: String)
         fun showLoading(show: Boolean)
     }
-
     interface Presenter {
+
         fun attachView(view: View)
         fun detachView()
         fun loadAll()
-        fun addFromPool(id: String)
-        fun removeFromUserList(id: String)
+        fun addFromPool(id: Long)
+        fun removeFromUserList(id: Long)
     }
 }

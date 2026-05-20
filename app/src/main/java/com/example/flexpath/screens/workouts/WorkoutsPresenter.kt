@@ -2,78 +2,103 @@ package com.example.flexpath.screens.workouts
 
 import com.example.flexpath.data.WorkoutsRepository
 import kotlinx.coroutines.*
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import android.content.Context
 
 class WorkoutsPresenter(private val context: Context) : WorkoutsContract.Presenter {
+
     private var view: WorkoutsContract.View? = null
     private val repo = WorkoutsRepository(context)
-    private val scope: CoroutineScope = MainScope()
-    private val operationLock = Mutex()
 
-    override fun attachView(view: WorkoutsContract.View) { this.view = view }
+    private val scope: CoroutineScope = MainScope()
+
+    private var isOperationInProgress = false
+
+    override fun attachView(view: WorkoutsContract.View) {
+        this.view = view
+    }
+
     override fun detachView() {
         view = null
         scope.cancel()
     }
 
+
     override fun loadAll() {
         view?.showLoading(true)
+
         scope.launch {
             try {
-                val pool = withContext(Dispatchers.IO) { repo.getProvidedPool() }
-                val user = withContext(Dispatchers.IO) { repo.getUserList() }
+                val pool = withContext(Dispatchers.IO) {
+                    repo.getProvidedPool()
+                }
+
+                val userWorkouts = withContext(Dispatchers.IO) {
+                    repo.loadUserList()
+                }
+
                 view?.showProvidedPool(pool)
-                view?.showUserList(user)
+                view?.showUserList(userWorkouts)
+
             } catch (ex: Exception) {
-                view?.showMessage("Failed to load workouts: ${ex.message ?: "unknown"}")
+                view?.showMessage("Failed to load workouts: ${ex.message}")
             } finally {
                 view?.showLoading(false)
             }
         }
     }
 
-    override fun addFromPool(id: String) {
+    override fun addFromPool(id: Long) {
+        if (isOperationInProgress) {
+            view?.showMessage("Please wait, operation in progress")
+            return
+        }
+
+        isOperationInProgress = true
+
         scope.launch {
-            if (!operationLock.tryLock()) {
-                view?.showMessage("Operation already in progress")
-                return@launch
-            }
             try {
-                val item = withContext(Dispatchers.IO) { repo.findInPool(id) }
-                if (item == null) {
-                    view?.showMessage("Workout not found")
-                    return@launch
+                val addedWorkout = withContext(Dispatchers.IO) {
+                    repo.addFromPoolById(id)
                 }
-                val added = withContext(Dispatchers.IO) { repo.addToUserList(item) }
-                if (added) view?.showAdded(item) else view?.showMessage("Already in your list")
+
+                if (addedWorkout != null) {
+                    view?.showAdded(addedWorkout)
+                } else {
+                    view?.showMessage("Workout already in your list or not found")
+                }
             } catch (ex: Exception) {
-                view?.showMessage("Failed to add workout: ${ex.message ?: "unknown"}")
+                view?.showMessage("Failed to add workout: ${ex.message}")
+
             } finally {
-                operationLock.unlock()
+                isOperationInProgress = false
             }
         }
     }
 
-    override fun removeFromUserList(id: String) {
+
+    override fun removeFromUserList(id: Long) {
+        if (isOperationInProgress) {
+            view?.showMessage("Please wait, operation in progress")
+            return
+        }
+        isOperationInProgress = true
+
         scope.launch {
-            if (!operationLock.tryLock()) {
-                view?.showMessage("Operation already in progress")
-                return@launch
-            }
             try {
-                val item = withContext(Dispatchers.IO) { repo.findInUserList(id) }
-                if (item == null) {
-                    view?.showMessage("Workout not found in your list")
-                    return@launch
+                val removedWorkout = withContext(Dispatchers.IO) {
+                    repo.removeFromUserListById(id)
                 }
-                val removed = withContext(Dispatchers.IO) { repo.removeFromUserList(id) }
-                if (removed) view?.showRemoved(item) else view?.showMessage("Failed to remove workout")
+
+                if (removedWorkout != null) {
+                    view?.showRemoved(removedWorkout)
+                } else {
+                    view?.showMessage("Workout not found in your list")
+                }
             } catch (ex: Exception) {
-                view?.showMessage("Failed to remove workout: ${ex.message ?: "unknown"}")
+                view?.showMessage("Failed to remove workout: ${ex.message}")
+
             } finally {
-                operationLock.unlock()
+                isOperationInProgress = false
             }
         }
     }

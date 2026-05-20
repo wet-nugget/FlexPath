@@ -11,7 +11,7 @@ class WorkoutAdapter(
     private var items: MutableList<WorkoutItem> = mutableListOf()
 ) : RecyclerView.Adapter<WorkoutAdapter.VH>() {
 
-    private val pendingSet = mutableSetOf<String>()
+    private val pendingSet = mutableSetOf<Long>()
     private var clickListener: ((WorkoutItem) -> Unit)? = null
     private var longClickListener: ((WorkoutItem) -> Unit)? = null
 
@@ -29,7 +29,7 @@ class WorkoutAdapter(
         notifyItemInserted(0)
     }
 
-    fun removeItemById(id: String) {
+    fun removeItemById(id: Long) {
         val idx = items.indexOfFirst { it.id == id }
         if (idx >= 0) {
             items.removeAt(idx)
@@ -37,13 +37,13 @@ class WorkoutAdapter(
         }
     }
 
-    fun markPending(id: String, pending: Boolean) {
+    fun markPending(id: Long, pending: Boolean) {
         if (pending) pendingSet.add(id) else pendingSet.remove(id)
         val idx = items.indexOfFirst { it.id == id }
         if (idx >= 0) notifyItemChanged(idx)
     }
 
-    fun isPending(id: String) = pendingSet.contains(id)
+    fun isPending(id: Long) = pendingSet.contains(id)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.item_workout, parent, false)
@@ -53,17 +53,12 @@ class WorkoutAdapter(
     override fun onBindViewHolder(holder: VH, position: Int) {
         val item = items[position]
         holder.title.text = item.title
-        holder.subtitle.text = buildString {
-            if (!item.primaryMuscle.isNullOrBlank()) append(item.primaryMuscle)
-            if (!item.equipment.isNullOrBlank()) {
-                if (isNotEmpty()) append(" • ")
-                append(item.equipment)
-            }
-            if (!item.difficulty.isNullOrBlank()) {
-                if (isNotEmpty()) append(" • ")
-                append(item.difficulty)
-            }
-        }
+
+        val primary = item.primaryMuscle.toString()
+        val equip = item.equipment.toString()
+        val diff = item.difficulty.toString()
+        holder.subtitle.text = "$primary • $equip • $diff"
+
         val pending = isPending(item.id)
         holder.disabledOverlay.visibility = if (pending) View.VISIBLE else View.GONE
         holder.itemView.isEnabled = !pending
