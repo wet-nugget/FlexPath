@@ -3,37 +3,106 @@ package com.example.flexpath.screens.profile
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
-import com.example.flexpath.screens.dashboard.DashboardActivity
+import androidx.appcompat.app.AlertDialog
 import com.example.flexpath.R
+import com.example.flexpath.screens.dashboard.DashboardActivity
 import com.example.flexpath.screens.login.LoginActivity
+import com.example.flexpath.ui.setEnabledRecursive
 
-class ProfileActivity : Activity() {
+class ProfileActivity : Activity(), ProfileContract.View {
+    private lateinit var presenter: ProfileContract.Presenter
+
+    private lateinit var backToDashboard: ImageView
+    private lateinit var clearUsers: TextView
+    private lateinit var tvUsername: TextView
+    private lateinit var progressBar: ProgressBar
+    private lateinit var rootContainer: View
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_screen)
 
-        val backToDashboard = findViewById<ImageView>(R.id.iconHome) // add this TextView in XML
-        val clearUsers = findViewById<TextView>(R.id.textviewClearUsers)
+        // Presenter (MVP)
+        ProfilePresenter(this).also { presenter = it }
+        presenter.attachView(this)
 
-        clearUsers.setOnClickListener {
-            val prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE)
-            val editor = prefs.edit()
-            editor.clear()
-            editor.apply()
+        // Views
+        backToDashboard = findViewById(R.id.iconHome)
+        clearUsers = findViewById(R.id.textviewClearUsers)
+        tvUsername = findViewById(R.id.textviewUsername)
+        progressBar = findViewById<View?>(R.id.progressBarGlobal) as? ProgressBar
+            ?: ProgressBar(this).apply { visibility = View.GONE }
+        rootContainer = findViewById(android.R.id.content)
 
-            val intent = Intent(this, LoginActivity::class.java)
-            Toast.makeText(this, "Cleared Users", Toast.LENGTH_SHORT).show()
-            startActivity(intent)
+        // Handlers
+        backToDashboard.setOnClickListener { presenter.onBackToDashboard() }
+        clearUsers.setOnClickListener { showClearConfirmation() }
+
+        // Load profile
+        presenter.loadProfile()
+    }
+
+    private fun showClearConfirmation() {
+        runOnUiThread {
+            AlertDialog.Builder(this)
+                .setTitle(getString(R.string.confirm_clear_users_title))
+                .setMessage(getString(R.string.confirm_clear_users_message))
+                .setPositiveButton(getString(R.string.confirm_clear_users_positive)) { dialog, _ ->
+                    dialog.dismiss()
+                    presenter.clearUsers()
+                }
+                .setNegativeButton(getString(R.string.confirm_clear_users_negative)) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setCancelable(true)
+                .show()
+        }
+    }
+
+    // View contract
+    override fun showUsername(username: String) {
+        runOnUiThread {
+            tvUsername.text = if (username.isNotBlank()) username else getString(R.string.example_username)
+        }
+    }
+
+    override fun showMessage(message: String) {
+        runOnUiThread {
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun showLoading(show: Boolean) {
+        runOnUiThread {
+            progressBar.visibility = if (show) View.VISIBLE else View.GONE
+            (rootContainer as? ViewGroup)?.setEnabledRecursive(!show)
+            backToDashboard.isEnabled = !show
+            clearUsers.isEnabled = !show
+        }
+    }
+
+    override fun navigateToDashboard() {
+        runOnUiThread {
+            startActivity(Intent(this, DashboardActivity::class.java))
             finish()
         }
-        // Profile → Dashboard
-        backToDashboard.setOnClickListener {
-            val intent = Intent(this, DashboardActivity::class.java)
-            startActivity(intent)
+    }
+
+    override fun navigateToLogin() {
+        runOnUiThread {
+            startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
+    }
+
+    override fun onDestroy() {
+        presenter.detachView()
+        super.onDestroy()
     }
 }

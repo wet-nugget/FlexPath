@@ -14,12 +14,14 @@
     <string name="login_with_email">Login with Email</string>
     <string name="login">Login</string>
     <string name="forgot_password">Forgot Password? Click Here</string>
+    <string name="loading">Loading</string>
 
     <!-- Register -->
     <string name="username">Username</string>
     <string name="reenter_password">Re-enter Password</string>
     <string name="submit">Confirm</string>
     <string name="already_have_account">Already have an account? Login</string>
+    <string name="registration_successful">Registration successful</string>
 
     <!-- Dashboard -->
     <string name="settings_desc">Settings</string>
@@ -49,5 +51,10 @@
     <string name="example_name_middle">Middle Name: A.</string>
     <string name="example_name_last">Last Name: Doe</string>
     <string name="example_email">Email: johndoe@example.com</string>
+    <string name="confirm_clear_users_title">Confirm</string>
+    <string name="confirm_clear_users_message">This will remove stored user credentials. Are you sure you want to continue?</string>
+    <string name="confirm_clear_users_positive">Clear</string>
+    <string name="confirm_clear_users_negative">Cancel</string>
+
 
 </resources>

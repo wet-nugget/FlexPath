@@ -14,9 +14,7 @@ interface WorkoutsContract {
         fun attachView(view: View)
         fun detachView()
         fun loadAll()
-        fun addFromPool(id: Long)
-        fun removeFromUserList(id: Long)
-        fun onUserItemClicked(item: WorkoutItem)
-        fun onPoolItemClicked(item: WorkoutItem)
+        fun addFromPool(id: String)
+        fun removeFromUserList(id: String)
     }
 }

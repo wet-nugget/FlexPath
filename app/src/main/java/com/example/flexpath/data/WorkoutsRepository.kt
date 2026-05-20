@@ -1,20 +1,26 @@
 package com.example.flexpath.data
 
 import android.content.Context
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.flexpath.screens.workouts.Difficulty
 import com.example.flexpath.screens.workouts.Equipment
 import com.example.flexpath.screens.workouts.MuscleGroup
 import com.example.flexpath.screens.workouts.WorkoutItem
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import org.json.JSONArray
 import org.json.JSONObject
 
 class WorkoutsRepository(private val context: Context) {
 
-    private val prefsName = "WorkoutsPrefs"
-    private val keyUserList = "workouts_user_list"
-    private val prefs = context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
+    companion object {
+        private val KEY_USER_LIST = stringPreferencesKey("workouts_user_list")
+    }
 
-
+    // Provided pool (same items you already had)
     private val pool: List<WorkoutItem> = listOf(
         WorkoutItem(
             id = 1001L,
@@ -110,10 +116,18 @@ class WorkoutsRepository(private val context: Context) {
 
     fun getProvidedPool(): List<WorkoutItem> = pool
 
-    fun loadUserList(): MutableList<WorkoutItem> {
-        val raw = prefs.getString(keyUserList, null) ?: return mutableListOf()
-        return try {
-            val arr = JSONArray(raw)
+    /**
+     * Load the user list once. Runs on Dispatchers.IO.
+     */
+    suspend fun loadUserList(): MutableList<WorkoutItem> = withContext(Dispatchers.IO) {
+        val json = context.dataStore.data
+            .map { prefs -> prefs[KEY_USER_LIST] }
+            .first()
+
+        if (json.isNullOrBlank()) return@withContext mutableListOf()
+
+        return@withContext try {
+            val arr = JSONArray(json)
             val out = mutableListOf<WorkoutItem>()
             for (i in 0 until arr.length()) {
                 val obj = arr.getJSONObject(i)
@@ -121,41 +135,48 @@ class WorkoutsRepository(private val context: Context) {
             }
             out
         } catch (ex: Exception) {
+            // If parsing fails, return empty list (caller can show a message if desired)
             mutableListOf()
         }
     }
 
-    fun saveUserList(list: List<WorkoutItem>) {
+    /**
+     * Save the user list. Runs on Dispatchers.IO.
+     */
+    suspend fun saveUserList(list: List<WorkoutItem>) = withContext(Dispatchers.IO) {
         val arr = JSONArray()
-        list.forEach { item ->
-            arr.put(workoutToJson(item))
+        list.forEach { item -> arr.put(workoutToJson(item)) }
+        val json = arr.toString()
+        context.dataStore.edit { prefs ->
+            prefs[KEY_USER_LIST] = json
         }
-        prefs.edit().putString(keyUserList, arr.toString()).apply()
     }
 
-    fun addFromPoolById(id: Long): WorkoutItem? {
+    suspend fun addFromPoolById(id: Long): WorkoutItem? = withContext(Dispatchers.IO) {
         val userList = loadUserList()
-        if (userList.any { it.id == id }) return null // already added
-        val item = pool.firstOrNull { it.id == id } ?: return null
+        if (userList.any { it.id == id }) return@withContext null
+        val item = pool.firstOrNull { it.id == id } ?: return@withContext null
         userList.add(0, item)
         saveUserList(userList)
-        return item
+        item
     }
 
-    fun removeFromUserListById(id: Long): WorkoutItem? {
+    suspend fun removeFromUserListById(id: Long): WorkoutItem? = withContext(Dispatchers.IO) {
         val userList = loadUserList()
         val idx = userList.indexOfFirst { it.id == id }
-        if (idx < 0) return null
+        if (idx < 0) return@withContext null
         val removed = userList.removeAt(idx)
         saveUserList(userList)
-        return removed
+        removed
     }
 
-    fun clearUserList() {
-        prefs.edit().remove(keyUserList).apply()
+    suspend fun clearUserList() = withContext(Dispatchers.IO) {
+        context.dataStore.edit { prefs ->
+            prefs.remove(KEY_USER_LIST)
+        }
     }
 
-
+    // JSON helpers (unchanged)
     private fun workoutToJson(item: WorkoutItem): JSONObject {
         val obj = JSONObject()
         obj.put("id", item.id)

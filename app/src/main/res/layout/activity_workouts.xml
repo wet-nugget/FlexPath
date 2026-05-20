@@ -1,52 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/workoutsRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="8dp">
+    android:padding="8dp"
+    android:background="@color/blue_bg">
 
     <TextView
-        android:id="@+id/tvPoolHeader"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Provided Pool"
-        android:textStyle="bold"
-        android:padding="8dp"/>
-
-    <ListView
-        android:id="@+id/listviewPoolWorkouts"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:dividerHeight="1dp"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#DDDDDD"
-        android:layout_marginVertical="8dp"/>
-
-    <TextView
-        android:id="@+id/tvUserHeader"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="My Workouts"
-        android:textStyle="bold"
-        android:padding="8dp"/>
-
-    <ListView
-        android:id="@+id/listviewUserWorkouts"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:dividerHeight="1dp"/>
-
-    <ProgressBar
-        android:id="@+id/progressBarLoading"
-        style="?android:attr/progressBarStyleSmall"
+        android:id="@+id/textviewPoolLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:text="Provided Pool"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/allerta_stencil"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerPool"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/textviewPoolLabel"
+        android:layout_marginTop="8dp"
+        android:clipToPadding="false"
+        android:paddingBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/textviewUserLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My Workouts"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:layout_below="@id/recyclerPool"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/allerta_stencil"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textviewUserLabel"
+        android:layout_marginTop="8dp"
+        android:layout_above="@+id/progressBarLoading"
+        android:clipToPadding="false"
+        android:paddingBottom="80dp"/>
+
+    <!-- Centered global ProgressBar -->
+    <ProgressBar
+        android:id="@+id/progressBarLoading"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_centerInParent="true"
+        android:indeterminate="true"
         android:visibility="gone"
-        android:padding="8dp"/>
-</LinearLayout>
+        android:contentDescription="@string/loading" />
+
+</RelativeLayout>

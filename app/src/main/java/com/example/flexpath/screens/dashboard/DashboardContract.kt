@@ -5,6 +5,8 @@ interface DashboardContract {
         fun showGreeting(username: String)
         fun navigateToProfile(username: String)
         fun navigateToLogin()
+        fun navigateToWorkouts()
+        fun navigateToPlans()
         fun showMessage(message: String)
         fun showLoading(show: Boolean)
     }

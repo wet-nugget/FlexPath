@@ -1,106 +1,89 @@
 package com.example.flexpath.screens.workouts
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.example.flexpath.R
 
 class WorkoutAdapter(
-    private val context: Context,
-    initialList: List<WorkoutItem> = emptyList(),
-    private val rowLayoutRes: Int = android.R.layout.simple_list_item_2
-) : BaseAdapter() {
+    private var items: MutableList<WorkoutItem> = mutableListOf()
+) : RecyclerView.Adapter<WorkoutAdapter.VH>() {
 
-    private val items = ArrayList<WorkoutItem>(initialList)
-    private val inflater: LayoutInflater = LayoutInflater.from(context)
-
+    private val pendingSet = mutableSetOf<String>()
     private var clickListener: ((WorkoutItem) -> Unit)? = null
-    private var longClickListener: ((WorkoutItem) -> Boolean)? = null
+    private var longClickListener: ((WorkoutItem) -> Unit)? = null
 
-    fun setOnItemClickListener(listener: (WorkoutItem) -> Unit) {
-        clickListener = listener
-    }
+    fun setOnItemClickListener(cb: (WorkoutItem) -> Unit) { clickListener = cb }
+    fun setOnItemLongClickListener(cb: (WorkoutItem) -> Unit) { longClickListener = cb }
 
-    fun setOnItemLongClickListener(listener: (WorkoutItem) -> Boolean) {
-        longClickListener = listener
-    }
-
-    fun updateList(newList: List<WorkoutItem>) {
-        items.clear()
-        items.addAll(newList)
+    fun updateList(newItems: List<WorkoutItem>) {
+        items = newItems.toMutableList()
+        pendingSet.clear()
         notifyDataSetChanged()
     }
 
     fun addItem(item: WorkoutItem) {
-        // add to top
         items.add(0, item)
-        notifyDataSetChanged()
+        notifyItemInserted(0)
     }
 
-    fun removeItemById(id: Long) {
+    fun removeItemById(id: String) {
         val idx = items.indexOfFirst { it.id == id }
         if (idx >= 0) {
             items.removeAt(idx)
-            notifyDataSetChanged()
+            notifyItemRemoved(idx)
         }
     }
 
-    override fun getCount(): Int = items.size
-
-    override fun getItem(position: Int): WorkoutItem = items[position]
-
-    override fun getItemId(position: Int): Long = items[position].id
-
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val holder: ViewHolder
-        val view: View
-
-        if (convertView == null) {
-            view = inflater.inflate(rowLayoutRes, parent, false)
-            holder = ViewHolder(view)
-            view.tag = holder
-        } else {
-            view = convertView
-            holder = view.tag as ViewHolder
-        }
-
-        val item = getItem(position)
-        holder.bind(item)
-
-        view.setOnClickListener { clickListener?.invoke(item) }
-        view.setOnLongClickListener {
-            longClickListener?.invoke(item) ?: false
-        }
-
-        return view
+    fun markPending(id: String, pending: Boolean) {
+        if (pending) pendingSet.add(id) else pendingSet.remove(id)
+        val idx = items.indexOfFirst { it.id == id }
+        if (idx >= 0) notifyItemChanged(idx)
     }
 
-    private class ViewHolder(private val root: View) {
-        private val titleView: TextView? = findTextView(root, android.R.id.text1, "rowTitle")
-        private val subtitleView: TextView? = findTextView(root, android.R.id.text2, "rowSubtitle")
+    fun isPending(id: String) = pendingSet.contains(id)
 
-        fun bind(item: WorkoutItem) {
-            titleView?.text = item.title
-            val subtitle = buildString {
-                append(item.primaryMuscle.name.lowercase().replaceFirstChar { it.uppercase() })
-                append(" • ")
-                append(item.equipment.name.lowercase().replaceFirstChar { it.uppercase() })
-                append(" • ")
-                append(item.difficulty.name.lowercase().replaceFirstChar { it.uppercase() })
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.item_workout, parent, false)
+        return VH(v)
+    }
+
+    override fun onBindViewHolder(holder: VH, position: Int) {
+        val item = items[position]
+        holder.title.text = item.title
+        holder.subtitle.text = buildString {
+            if (!item.primaryMuscle.isNullOrBlank()) append(item.primaryMuscle)
+            if (!item.equipment.isNullOrBlank()) {
+                if (isNotEmpty()) append(" • ")
+                append(item.equipment)
             }
-            subtitleView?.text = subtitle
-        }
-
-        companion object {
-            private fun findTextView(root: View, androidId: Int, altIdName: String): TextView? {
-                val byAndroid = root.findViewById<TextView?>(androidId)
-                if (byAndroid != null) return byAndroid
-                val res = root.resources
-                val altId = res.getIdentifier(altIdName, "id", root.context.packageName)
-                return if (altId != 0) root.findViewById(altId) else null
+            if (!item.difficulty.isNullOrBlank()) {
+                if (isNotEmpty()) append(" • ")
+                append(item.difficulty)
             }
         }
+        val pending = isPending(item.id)
+        holder.disabledOverlay.visibility = if (pending) View.VISIBLE else View.GONE
+        holder.itemView.isEnabled = !pending
+
+        holder.itemView.setOnClickListener {
+            if (!pending) clickListener?.invoke(item)
+        }
+        holder.itemView.setOnLongClickListener {
+            if (!pending) {
+                longClickListener?.invoke(item)
+                true
+            } else false
+        }
+    }
+
+    override fun getItemCount(): Int = items.size
+
+    class VH(view: View) : RecyclerView.ViewHolder(view) {
+        val title: TextView = view.findViewById(R.id.textTitle)
+        val subtitle: TextView = view.findViewById(R.id.textSubtitle)
+        val disabledOverlay: View = view.findViewById(R.id.viewDisabledOverlay)
     }
 }
