@@ -203,7 +203,6 @@ class WorkoutsRepository(private val context: Context) {
     }
 
 
-    
     private fun workoutToJson(item: WorkoutItem): JSONObject {
         val obj = JSONObject()
         obj.put("id", item.id)

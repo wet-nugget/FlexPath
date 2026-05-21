@@ -9,6 +9,9 @@ interface WorkoutsContract {
         fun showRemoved(item: WorkoutItem)
         fun showMessage(message: String)
         fun showLoading(show: Boolean)
+        fun navigateToDashboard()
+        fun navigateToProfile()
+        fun navigateToPlans()
     }
     interface Presenter {
 
@@ -17,5 +20,8 @@ interface WorkoutsContract {
         fun loadAll()
         fun addFromPool(id: Long)
         fun removeFromUserList(id: Long)
+        fun onDashboardClicked()
+        fun onProfileClicked()
+        fun onPlansClicked()
     }
 }

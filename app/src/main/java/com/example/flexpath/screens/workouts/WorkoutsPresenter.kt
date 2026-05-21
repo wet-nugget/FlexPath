@@ -102,4 +102,16 @@ class WorkoutsPresenter(private val context: Context) : WorkoutsContract.Present
             }
         }
     }
+
+    override fun onDashboardClicked() {
+        view?.navigateToDashboard()
+    }
+
+    override fun onProfileClicked() {
+        view?.navigateToProfile()
+    }
+
+    override fun onPlansClicked() {
+        view?.navigateToPlans()
+    }
 }

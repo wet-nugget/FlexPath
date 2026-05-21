@@ -13,6 +13,7 @@ import androidx.appcompat.app.AlertDialog
 import com.example.flexpath.R
 import com.example.flexpath.screens.dashboard.DashboardActivity
 import com.example.flexpath.screens.login.LoginActivity
+import com.example.flexpath.screens.workouts.WorkoutsActivity
 import com.example.flexpath.ui.setEnabledRecursive
 
 class ProfileActivity : Activity(), ProfileContract.View {
@@ -23,6 +24,10 @@ class ProfileActivity : Activity(), ProfileContract.View {
     private lateinit var tvUsername: TextView
     private lateinit var progressBar: ProgressBar
     private lateinit var rootContainer: View
+    private lateinit var iconHome: ImageView
+    private lateinit var iconWorkouts: ImageView
+    private lateinit var iconPlans: ImageView
+    private lateinit var iconProfile: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,9 +45,17 @@ class ProfileActivity : Activity(), ProfileContract.View {
             ?: ProgressBar(this).apply { visibility = View.GONE }
         rootContainer = findViewById(android.R.id.content)
 
+        iconHome = findViewById(R.id.iconHome)
+        iconWorkouts = findViewById(R.id.iconWorkouts)
+        iconPlans = findViewById(R.id.iconPlans)
+        iconProfile = findViewById(R.id.iconProfile)
+
         // Handlers
-        backToDashboard.setOnClickListener { presenter.onBackToDashboard() }
         clearUsers.setOnClickListener { showClearConfirmation() }
+        iconHome.setOnClickListener { presenter.onDashboardClicked() }
+        iconWorkouts.setOnClickListener { presenter.onWorkoutsClicked() }
+        iconPlans.setOnClickListener { presenter.onPlansClicked() }
+        iconProfile.setOnClickListener { showMessage("Already on Profile") }
 
         // Load profile
         presenter.loadProfile()
@@ -84,6 +97,10 @@ class ProfileActivity : Activity(), ProfileContract.View {
             (rootContainer as? ViewGroup)?.setEnabledRecursive(!show)
             backToDashboard.isEnabled = !show
             clearUsers.isEnabled = !show
+            iconHome.isEnabled = !show
+            iconWorkouts.isEnabled = !show
+            iconPlans.isEnabled = !show
+            iconProfile.isEnabled = !show
         }
     }
 
@@ -98,6 +115,18 @@ class ProfileActivity : Activity(), ProfileContract.View {
         runOnUiThread {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
+        }
+    }
+
+    override fun navigateToWorkouts() {
+        runOnUiThread {
+            startActivity(Intent(this, WorkoutsActivity::class.java))
+        }
+    }
+
+    override fun navigateToPlans() {
+        runOnUiThread {
+            showMessage("Plans screen not implemented yet")
         }
     }
 

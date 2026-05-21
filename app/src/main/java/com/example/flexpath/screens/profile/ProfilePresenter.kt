@@ -51,7 +51,15 @@ class ProfilePresenter(context: Context) : ProfileContract.Presenter {
         }
     }
 
-    override fun onBackToDashboard() {
+    override fun onDashboardClicked() {
         view?.navigateToDashboard()
+    }
+
+    override fun onWorkoutsClicked() {
+        view?.navigateToWorkouts()
+    }
+
+    override fun onPlansClicked() {
+        view?.navigateToPlans()
     }
 }

@@ -7,6 +7,8 @@ interface ProfileContract {
         fun showLoading(show: Boolean)
         fun navigateToDashboard()
         fun navigateToLogin()
+        fun navigateToWorkouts()
+        fun navigateToPlans()
     }
 
     interface Presenter {
@@ -14,6 +16,8 @@ interface ProfileContract {
         fun detachView()
         fun loadProfile()
         fun clearUsers()
-        fun onBackToDashboard()
+        fun onDashboardClicked()
+        fun onWorkoutsClicked()
+        fun onPlansClicked()
     }
 }
