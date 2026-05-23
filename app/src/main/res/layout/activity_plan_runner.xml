@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/blue_bg"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/imageviewBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/bg_dark_geometric"
+        android:scaleType="centerCrop"
+        android:alpha="0.28"
+        android:contentDescription="@string/background_desc" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/textviewRunnerPlanName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Plan Runner"
+            android:textColor="@color/yellow"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/allerta_stencil" />
+
+        <TextView
+            android:id="@+id/textviewRunnerProgress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Workout 1 / 4"
+            android:textColor="@color/dark_blue2"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/allerta_stencil" />
+
+        <TextView
+            android:id="@+id/textviewRunnerWorkoutTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Workout title"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/allerta_stencil" />
+
+        <TextView
+            android:id="@+id/textviewRunnerWorkoutDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Workout details and equipment"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/allerta_stencil" />
+
+        <TextView
+            android:id="@+id/textviewRunnerWorkoutDescription"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="Workout description goes here."
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/allerta_stencil" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/buttonSkipWorkout"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:background="@drawable/card_light_grey"
+                android:text="Skip"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:fontFamily="@font/allerta_stencil"
+                android:padding="12dp"
+                android:layout_marginEnd="8dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/buttonCompleteWorkout"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:background="@drawable/card_light_grey"
+                android:text="Complete"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:fontFamily="@font/allerta_stencil"
+                android:padding="12dp"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="18dp" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBarLoading"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_centerInParent="true"
+        android:indeterminate="true"
+        android:visibility="gone"
+        android:contentDescription="@string/loading" />
+</RelativeLayout>

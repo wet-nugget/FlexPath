@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/textDialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Plan name"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:fontFamily="@font/allerta_stencil"
+        android:layout_marginBottom="12dp" />
+
+    <EditText
+        android:id="@+id/editTextPlanName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Name"
+        android:textColor="@color/white"
+        android:textColorHint="@color/dark_blue2"
+        android:background="@drawable/card_light_grey"
+        android:padding="12dp"
+        android:inputType="textCapWords" />
+
+    <EditText
+        android:id="@+id/editTextPlanDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Description (optional)"
+        android:textColor="@color/white"
+        android:textColorHint="@color/dark_blue2"
+        android:background="@drawable/card_light_grey"
+        android:padding="12dp"
+        android:layout_marginTop="12dp"
+        android:inputType="textMultiLine"
+        android:minLines="2" />
+</LinearLayout>

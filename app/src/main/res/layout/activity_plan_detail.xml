@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/planDetailRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/blue_bg">
+
+    <ImageView
+        android:id="@+id/imageviewBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/bg_dark_geometric"
+        android:scaleType="centerCrop"
+        android:alpha="0.28"
+        android:contentDescription="@string/background_desc" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_above="@+id/layoutBottomNav">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerPlanWorkouts"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="16dp"
+            android:paddingBottom="80dp" />
+
+        <TextView
+            android:id="@+id/textviewPlanTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Plan Name"
+            android:textColor="@color/yellow"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/allerta_stencil" />
+
+        <TextView
+            android:id="@+id/textviewPlanDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Plan description goes here"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/allerta_stencil" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="18dp"
+            android:weightSum="3">
+
+            <TextView
+                android:id="@+id/buttonStartPlan"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:background="@drawable/card_light_grey"
+                android:text="Start"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:fontFamily="@font/allerta_stencil"
+                android:padding="12dp"
+                android:layout_marginEnd="8dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/buttonAddWorkout"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:background="@drawable/card_light_grey"
+                android:text="Add workout"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:fontFamily="@font/allerta_stencil"
+                android:padding="12dp"
+                android:layout_marginEnd="8dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/buttonEditPlan"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:background="@drawable/card_light_grey"
+                android:text="Edit"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:fontFamily="@font/allerta_stencil"
+                android:padding="12dp"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:id="@+id/viewEmptyPlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_light_grey"
+            android:visibility="gone"
+            android:padding="16dp"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="This plan has no workouts yet. Use Add workout to include exercises."
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:fontFamily="@font/allerta_stencil" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBarLoading"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_centerInParent="true"
+        android:indeterminate="true"
+        android:visibility="gone"
+        android:contentDescription="@string/loading" />
+
+    <LinearLayout
+        android:id="@+id/layoutBottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:background="@color/dark_blue"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <ImageView
+            android:id="@+id/iconHome"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_home"
+            android:contentDescription="@string/home_desc"
+            android:scaleY=".75"
+            android:scaleX=".75"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <ImageView
+            android:id="@+id/iconWorkouts"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_dumbbell"
+            android:contentDescription="@string/workouts_desc"
+            android:scaleY=".75"
+            android:scaleX=".75"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <ImageView
+            android:id="@+id/iconPlans"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_clipboard"
+            android:contentDescription="@string/plans_desc"
+            android:scaleY=".75"
+            android:scaleX=".75"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <ImageView
+            android:id="@+id/iconProfile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_user"
+            android:contentDescription="@string/profile_desc"
+            android:scaleY=".75"
+            android:scaleX=".75"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            android:clickable="true"
+            android:focusable="true" />
+    </LinearLayout>
+</RelativeLayout>

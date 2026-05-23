@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:padding="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/card_light_grey"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/textPlanName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Full Body Plan"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/allerta_stencil" />
+
+        <TextView
+            android:id="@+id/textPlanDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textPlanName"
+            android:layout_marginTop="6dp"
+            android:text="A moderate routine for strength and balance"
+            android:textColor="@color/dark_blue2"
+            android:textSize="12sp"
+            android:fontFamily="@font/allerta_stencil" />
+
+        <TextView
+            android:id="@+id/textPlanMeta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textPlanDescription"
+            android:layout_marginTop="10dp"
+            android:text="3 workouts • 36 min • Never used"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:fontFamily="@font/allerta_stencil" />
+    </RelativeLayout>
+</FrameLayout>

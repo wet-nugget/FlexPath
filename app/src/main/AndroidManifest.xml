@@ -23,6 +23,15 @@
             android:name=".screens.dashboard.DashboardActivity"
             android:exported="false" />
         <activity
+            android:name=".screens.plans.PlansActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.plans.PlanDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.plans.PlanRunnerActivity"
+            android:exported="false" />
+        <activity
             android:name=".screens.register.RegisterActivity"
             android:exported="false" />
         <activity

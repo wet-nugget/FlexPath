@@ -8,7 +8,7 @@
         android:id="@+id/itemRoot"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/card_background"
+        android:background="@drawable/card_light_grey"
         android:padding="12dp">
 
         <TextView

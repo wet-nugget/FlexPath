@@ -115,7 +115,8 @@ class WorkoutsRepository(private val context: Context) {
     
     fun getProvidedPool(): List<WorkoutItem> = pool
 
-    
+    fun getWorkoutById(id: Long): WorkoutItem? = pool.firstOrNull { it.id == id }
+
     suspend fun loadUserList(): MutableList<WorkoutItem> = withContext(Dispatchers.IO) {
         val json = context.dataStore.data
             .map { prefs -> prefs[KEY_USER_LIST] }

@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.flexpath.R
 import com.example.flexpath.screens.login.LoginActivity
+import com.example.flexpath.screens.plans.PlansActivity
 import com.example.flexpath.screens.profile.ProfileActivity
 import com.example.flexpath.screens.workouts.WorkoutsActivity
 import com.example.flexpath.ui.setEnabledRecursive
@@ -84,7 +85,7 @@ class DashboardActivity : Activity(), DashboardContract.View {
 
     override fun navigateToPlans() {
         runOnUiThread {
-            showMessage("Plans screen not implemented yet")
+            startActivity(Intent(this, PlansActivity::class.java))
         }
     }
 

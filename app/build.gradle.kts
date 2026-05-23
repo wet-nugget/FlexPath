@@ -26,6 +26,12 @@ android {
             )
         }
     }
+    sourceSets {
+        getByName("main") {
+            java.srcDirs("src/main/java")
+            kotlin.srcDirs("src/main/kotlin", "src/main/java")
+        }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8

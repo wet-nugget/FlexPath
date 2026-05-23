@@ -8,13 +8,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.flexpath.R
+import com.example.flexpath.data.WorkoutsRepository
 import com.example.flexpath.screens.dashboard.DashboardActivity
+import com.example.flexpath.screens.plans.PlansActivity
+import com.example.flexpath.screens.plans.PlansRepository
 import com.example.flexpath.screens.profile.ProfileActivity
 import com.example.flexpath.ui.setEnabledRecursive
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class WorkoutsActivity : Activity(), WorkoutsContract.View {
 
@@ -30,6 +42,8 @@ class WorkoutsActivity : Activity(), WorkoutsContract.View {
     private lateinit var iconWorkouts: ImageView
     private lateinit var iconPlans: ImageView
     private lateinit var iconProfile: ImageView
+    private lateinit var plansRepo: PlansRepository
+    private val planScope: CoroutineScope = MainScope()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,8 +52,7 @@ class WorkoutsActivity : Activity(), WorkoutsContract.View {
 
         presenter = WorkoutsPresenter(this)
         presenter.attachView(this)
-
-
+        plansRepo = PlansRepository(this)
         recyclerPool = findViewById(R.id.recyclerPool)
         recyclerUser = findViewById(R.id.recyclerUser)
         progressBar = findViewById(R.id.progressBarLoading)
@@ -70,11 +83,16 @@ class WorkoutsActivity : Activity(), WorkoutsContract.View {
 
         poolAdapter.setOnItemClickListener { item ->
             AlertDialog.Builder(this)
-                .setTitle("Add workout")
-                .setMessage("Add \"${item.title}\" to your workouts?")
-                .setPositiveButton("Add") { _, _ ->
-                    presenter.addFromPool(item.id)
-                    poolAdapter.markPending(item.id, true)
+                .setTitle(item.title)
+                .setItems(arrayOf("Add to My Workouts", "Add to Plan", "View details")) { _, which ->
+                    when (which) {
+                        0 -> {
+                            presenter.addFromPool(item.id)
+                            poolAdapter.markPending(item.id, true)
+                        }
+                        1 -> showAddToPlanChooser(item)
+                        2 -> showWorkoutDetails(item)
+                    }
                 }
                 .setNegativeButton("Cancel", null)
                 .show()
@@ -110,6 +128,96 @@ class WorkoutsActivity : Activity(), WorkoutsContract.View {
         }
 
         presenter.loadAll()
+    }
+
+    private fun showAddToPlanChooser(item: WorkoutItem) {
+        planScope.launch {
+            val plans = withContext(Dispatchers.IO) { plansRepo.loadPlans() }
+            val options = mutableListOf("Create new plan")
+            options += plans.map { "${it.name} (${it.workoutCount})" }
+            runOnUiThread {
+                AlertDialog.Builder(this@WorkoutsActivity)
+                    .setTitle("Add \"${item.title}\" to plan")
+                    .setItems(options.toTypedArray()) { _, index ->
+                        if (index == 0) {
+                            showCreatePlanForItem(item)
+                        } else {
+                            val plan = plans[index - 1]
+                            planScope.launch {
+                                val added = withContext(Dispatchers.IO) { plansRepo.addWorkoutToPlan(plan.id, item.id) }
+                                runOnUiThread {
+                                    if (added) {
+                                        Snackbar.make(rootContainer, "Added \"${item.title}\" to ${plan.name}", Snackbar.LENGTH_LONG)
+                                            .setAction("Undo") {
+                                                planScope.launch {
+                                                    withContext(Dispatchers.IO) { plansRepo.removeWorkoutFromPlan(plan.id, item.id) }
+                                                }
+                                            }
+                                            .show()
+                                    } else {
+                                        showMessage("This workout is already in ${plan.name}")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .show()
+            }
+        }
+    }
+
+    private fun showCreatePlanForItem(item: WorkoutItem) {
+        runOnUiThread {
+            val dialogView = layoutInflater.inflate(R.layout.dialog_plan_edit, null)
+            val title = dialogView.findViewById<TextView>(R.id.textDialogTitle)
+            val nameField = dialogView.findViewById<TextView>(R.id.editTextPlanName)
+            val descriptionField = dialogView.findViewById<TextView>(R.id.editTextPlanDescription)
+            title.text = "Create plan"
+
+            val dialog = AlertDialog.Builder(this)
+                .setView(dialogView)
+                .setPositiveButton("Create", null)
+                .setNegativeButton("Cancel", null)
+                .create()
+
+            dialog.setOnShowListener {
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                    val planName = nameField.text.toString().trim()
+                    val planDescr = descriptionField.text.toString().trim().takeIf { it.isNotBlank() }
+                    if (planName.isBlank()) {
+                        nameField.error = "Name required"
+                        return@setOnClickListener
+                    }
+                    planScope.launch {
+                        val plan = withContext(Dispatchers.IO) { plansRepo.createPlan(planName, planDescr) }
+                        runOnUiThread {
+                            if (plan != null) {
+                                Snackbar.make(rootContainer, "Created plan ${plan.name}", Snackbar.LENGTH_LONG)
+                                    .setAction("Add workout") {
+                                        planScope.launch {
+                                            withContext(Dispatchers.IO) { plansRepo.addWorkoutToPlan(plan.id, item.id) }
+                                        }
+                                    }
+                                    .show()
+                                dialog.dismiss()
+                            } else {
+                                showMessage("Plan name must be unique")
+                            }
+                        }
+                    }
+                }
+            }
+            dialog.show()
+        }
+    }
+
+    private fun showWorkoutDetails(item: WorkoutItem) {
+        AlertDialog.Builder(this)
+            .setTitle(item.title)
+            .setMessage(item.description ?: "No description")
+            .setPositiveButton("OK", null)
+            .show()
     }
 
     
@@ -175,12 +283,13 @@ class WorkoutsActivity : Activity(), WorkoutsContract.View {
 
     override fun navigateToPlans() {
         runOnUiThread {
-            showMessage("Plans screen not implemented yet")
+            startActivity(Intent(this, PlansActivity::class.java))
         }
     }
     
     override fun onDestroy() {
         presenter.detachView()
+        planScope.cancel()
         super.onDestroy()
     }
 }
